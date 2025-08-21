@@ -60,7 +60,10 @@ class PICOGAME:
         self.card_name = self.card_url.split("/")[-1]
 
         try:
-            devDiv = cardPage.find("a", href=re.compile(r"^/bbs/\?uid=\d+"))
+            devRow = cardPage.find(
+                "div", {"style": "display:table;color:#49f;font-size:10pt"}
+            )
+            devDiv = devRow.find("a", href=re.compile(r"^/bbs/\?uid=\d+"))
             self.developer = devDiv.get_text(strip=True)
         except:
             console.print(f"Failed to retrieve developer name for {self.title}")
@@ -161,9 +164,8 @@ def printGames(games):
     table.add_column("Title", justify="left", no_wrap=True)
     table.add_column("Developer", style="magenta")
     table.add_column("Card URL", style="green")
-    table.add_column("Thumbnail", justify="right", style="green")
     for i in games:
-        table.add_row(i.title, i.developer, i.card_url, i.thumbnail)
+        table.add_row(i.title, i.developer, i.card_url)
     console.print(table)
 
 
@@ -224,3 +226,4 @@ if __name__ == "__main__":
     createInitialFolder()
     games = searchAndDownload()
     generateXMLFile(games)
+    printGames(games)
